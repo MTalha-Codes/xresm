@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "xresolution-manager"
-version = "0.1.0"
+name = "xresm"
+version = "1.0.0"
