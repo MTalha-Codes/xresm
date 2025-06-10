@@ -1,6 +1,23 @@
-[package]
+[package] # cargo-aur can workout with this
 name = "xresm"
+authors = ["MTalha-Codes"]
+description = "Resolution Management CLI for X11 Based Sessions"
+repository = "https://github.com/MTalha-Codes/xresm"
+license = "MIT"
 version = "1.0.0"
 edition = "2024"
 
+[package.metadata.deb] # since cargo-deb can't work with [packages] so it needs this
+section = "utils"
+priority = "optional"
+depends = "libgcc1"
+assets = [
+    ["target/release/xresm", "usr/bin/", "755"],
+    ["LICENSE", "usr/share/doc/xresm/", "644"]
+]
+
+[package.metadata.generate-rpm] # cargo-generate-rpm works with this only
+assets = [
+    {source = "target/release/xresm", dest = "/usr/bin/", mode = "755"}
+]
 [dependencies]
