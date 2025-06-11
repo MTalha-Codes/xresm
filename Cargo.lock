@@ -3,5 +3,14 @@
 version = 4
 
 [[package]]
+name = "arg_parse"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f37ce4cd38e532d0664fb4274d32a5793f56271e9aa7e9ea1dd1c402239f801d"
+
+[[package]]
 name = "xresm"
 version = "1.0.0"
+dependencies = [
+ "arg_parse",
+]
