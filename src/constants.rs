@@ -37,14 +37,3 @@ pub mod supported_resolutions {
     pub const RESOLUTION_2560_1600: (&str,&str) = ("2560","1600");
     pub const RESOLUTION_3840_2160:(&str,&str) = ("3840","2160");
 }
-
-pub mod refresh_rates {
-    pub const REFRESH_RATE_60:i32 = 60;
-    pub const REFRESH_RATE_75:i32 = 75;
-    pub const REFRESH_RATE_90:i32 = 90;
-    pub const REFRESH_RATE_120:i32 = 120;
-    pub const REFRESH_RATE_144:i32 = 144;
-    pub const REFRESH_RATE_165:i32 = 165;
-    pub const REFRESH_RATE_240:i32 = 240;
-    
-}
