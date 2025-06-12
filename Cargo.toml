@@ -21,4 +21,4 @@ assets = [
     {source = "target/release/xresm", dest = "/usr/bin/", mode = "755"}
 ]
 [dependencies]
-arg_parse = "0.3.0"
+#arg_parse = "0.3.0"
