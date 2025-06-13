@@ -1,11 +1,12 @@
-use std::process::{Command, Stdio};
+use std::io::BufRead;
+use std::process::Command;
 /// # Resolution Manager
 /// This struct is the backbone of whole project, and it decides how the resolution is handled.
 /// ## Fields
-/// This struct has two fields for storing: 
+/// This struct has two fields for storing:
 ///    - Width of the Resolution that a user want to apply.
 ///    - Height of the Resolution that a user want to apply.
-/// 
+///
 ///   Both fields are of type `String`
 /// ## Methods
 /// This struct handles resolution management via a number public and private methods.
@@ -37,7 +38,7 @@ impl ResolutionManager {
     /// It takes one implicit parameter.
     /// - `&self`: An Immutable reference to the struct.
     /// ## Returns
-    /// It returns a tuple of type `(bool, &str)`; where 
+    /// It returns a tuple of type `(bool, &str)`; where
     /// - `bool` is either false or true depending on returned value by the command.
     /// - `&str` is custom curated error message
     fn is_xrandr_installed(&self) -> (bool, &str) {
@@ -52,7 +53,7 @@ impl ResolutionManager {
     /// It takes one implicit parameter.
     /// - `&self`: An Immutable reference to the struct.
     /// ## Returns
-    /// It returns a tuple of type `(bool, &str)`; where 
+    /// It returns a tuple of type `(bool, &str)`; where
     /// - `bool` is either false or true depending on returned value by the command.
     /// - `&str` is custom curated error message
     fn is_cvt_installed(&self) -> (bool, &str) {
@@ -98,14 +99,14 @@ impl ResolutionManager {
         let double_quote_index = cvt_modeline.find('"').unwrap_or(0);
         String::from(&cvt_modeline[double_quote_index..cvt_modeline.len() - 1])
     }
-    /// The `get_output_source()` Method
+    /// ## The `get_output_source()` Method
     /// It executes `xrandr` anonymously in the terminal and get the output source aka connected device/display.
     /// ## Parameters
     /// It takes one implicit parameter.
     /// - `&self`: An Immutable reference to the struct.
-    /// ## Returns 
+    /// ## Returns
     /// It returns the connected display name.
-    /// ### Example 
+    /// ### Example
     /// ```
     /// $ xrandr
     /// Screen 0: minimum 320 x 200, current 1680 x 1050, maximum 16384 x 16384
@@ -114,12 +115,12 @@ impl ResolutionManager {
     ///    800x600       60.32    56.25  
     ///    848x480       60.00  
     ///    640x480       59.94  
-    ///    "1680x1050_60.00"  59.95* 
+    ///    "1680x1050_60.00"  59.95*
     /// HDMI-1 disconnected (normal left inverted right x axis y axis)
     /// DP-1 disconnected (normal left inverted right x axis y axis)
     /// ```
     /// **from this huge output it filters and return VGA-1 which we can see is connected display.**
-    fn get_output_source(&self) -> String {
+    fn get_connected_devices(&self) -> Vec<String> {
         {
             let xrandr_status = self.is_xrandr_installed();
             if !xrandr_status.0 {
@@ -127,29 +128,29 @@ impl ResolutionManager {
                     "xrandr is not installed on your system !\nError: {}",
                     xrandr_status.1
                 );
-                return String::new();
+                return vec!["".to_string()];
             }
         }
         // take the output of xrandr into this variable; not print to regular stdout
-        let xrandr_stdout = Command::new("xrandr")
-            .stdout(Stdio::piped())
-            .spawn()
-            .expect("Failed to run xrandr; Reason: Unknown")
-            .stdout
-            .take()
-            .expect("Couldn't access xrandr output");
-        let grep = Command::new("grep")
-            .args(["-w", "connected"])
-            .stdin(Stdio::from(xrandr_stdout))/* feed the output of xrandr into grep for pattern matching */
-            .stdout(Stdio::piped())
+        let binding = Command::new("xrandr")
             .output()
-            .expect("Failed to run grep; Reason: Unknown")
-            .stdout;
-        let source_line = String::from_utf8(grep).expect("failed to parse utf-8 byte sequence");
-        let connected_index = source_line
-            .find("connected")
-            .expect("source is parsed incorrectly");
-        String::from(&source_line[..connected_index - 1])
+            .expect("xrandr failed to run");
+        let xrandr_stdout = binding.stdout.lines();
+        let mut connected_devices: Vec<String> = Vec::new();
+        for each_line in xrandr_stdout {
+            let Ok(unwrapped_line) = each_line else {
+                continue;
+            };
+            let Some(connected_index) = unwrapped_line.find("connected") else {
+                continue;
+            };
+            let device = unwrapped_line[..connected_index].trim();
+            if device.contains("dis") {
+                continue;
+            }
+            connected_devices.push(device.to_string());
+        }
+        connected_devices
     }
     /// ## The `new_mode()` Method
     /// It executes this command anonymously in the terminal
@@ -157,13 +158,13 @@ impl ResolutionManager {
     /// $ xrandr --newmode <mode_name> <clock MHz> ...
     /// ```
     /// ## Parameters
-    /// It takes two parameters: 
+    /// It takes two parameters:
     /// 1. `&self`: Immutable reference to struct.
     /// 2. `parsed_modeline: Vec<&str>`: A vector of string slices which contains every argument needed for `--newmode` flag.
     /// ## Returns
-    /// It returns nothing.
-    fn new_mode(&self, parsed_modeline: Vec<&str>) {
-        let _ = Command::new("xrandr")
+    /// It returns `bool` to indicate whether command execution was successful or error-full.
+    fn new_mode(&self, parsed_modeline: Vec<&str>) -> bool {
+        Command::new("xrandr")
             .args([
                 "--newmode",
                 parsed_modeline[0],
@@ -179,11 +180,11 @@ impl ResolutionManager {
                 parsed_modeline[10],
                 parsed_modeline[11],
             ])
-            .status()
-            .expect("newmode returned something bad");
+            .output()
+            .is_ok()
     }
     /// ## The `add_mode()` Method
-    /// It executes this command anonymously in the terminal: 
+    /// It executes this command anonymously in the terminal:
     /// ```
     /// $ xrandr --addmode <output> <mode_name>
     /// ```
@@ -193,15 +194,15 @@ impl ResolutionManager {
     /// 2. `source: &str`: A string slice which represent the currently connected display device.
     /// 3. `mode: &str`: A string slice which represent the mode name which was added via the `xrandr --newmode` command.
     /// ## Returns
-    /// It returns nothing.
-    fn add_mode(&self, source: &str, mode: &str) {
-        let _ = Command::new("xrandr")
+    /// It returns `bool` to indicate whether command execution was successful or error-full.
+    fn add_mode(&self, source: &str, mode: &str) -> bool {
+        Command::new("xrandr")
             .args(["--addmode", source, mode])
-            .status()
-            .expect("addmode returned something bad");
+            .output()
+            .is_ok()
     }
     /// ## The `apply()` Method
-    /// It executes this command anonymously in the terminal: 
+    /// It executes this command anonymously in the terminal:
     /// ```
     /// $ xrandr --output <output> --mode <mode_name>
     /// ```
@@ -209,34 +210,40 @@ impl ResolutionManager {
     /// It takes 3 parameters:
     /// 1. `&self`: Immutable reference to struct.
     /// 2. `source: &str`: A string slice which represent the currently connected display device.
-    /// 3. `mode: &str`: A string slice which represent the mode name which was added via the `xrandr --newmode` command.
+    /// 3. `mode: &str`: A string slice which represent the mode name which was added via the `xrandr --addmode` command.
     /// ## Returns
-    /// It returns nothing.
-    fn apply(&self, source: &str, mode: &str) {
-        let _ = Command::new("xrandr")
+    /// It returns `bool` to indicate whether command execution was successful or error-full.
+    fn apply(&self, source: &str, mode: &str) -> bool {
+        Command::new("xrandr")
             .args(["--output", source, "--mode", mode])
-            .status()
-            .expect("output returned something bad");
+            .output()
+            .is_ok()
     }
     /// ## The `apply_resolution()` Method
     /// It handles the main resolution handling by calling different methods defined above.
     /// ## Parameters
     /// It takes only one parameter which is an immutable reference to the struct.
-    /// ## Returns 
+    /// ## Returns
     /// It returns nothing.
     pub fn apply_resolution(&self) {
         // This will not be persistent; changes will be roll backed by OS after logout or reboot.
-        let source = self.get_output_source();
+        let connected_devices = self.get_connected_devices();
         let modeline = self.get_mode_line();
-        if source.is_empty() || modeline.is_empty() {
+        if connected_devices.is_empty() || modeline.is_empty() {
             return; // early return to escape and not execute the remaining code; because it will lead to bad commands.
         }
-        let mode = String::from(
-            &modeline[modeline.find('"').expect("mode line is bad")
-                ..modeline.rfind('"').expect("mode line is bad") + 1],
-        );
+        let mode = &modeline[modeline.find('"').expect("mode line is bad")
+            ..modeline.rfind('"').expect("mode line is bad") + 1];
         self.new_mode(modeline.split_whitespace().collect());
-        self.add_mode(source.as_str(), mode.as_str());
-        self.apply(source.as_str(), mode.as_str());
+        for device in connected_devices {
+            let success = self.add_mode(device.as_str(), mode) && self.apply(device.as_str(), mode);
+            if !success {
+                println!(
+                    "Failed to Set Desired Resolution\nError While Applying {}x{}",
+                    self.desired_resolution_width, self.desired_resolution_height
+                );
+                break;
+            }
+        }
     }
 }
