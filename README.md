@@ -55,7 +55,7 @@ sudo pacman -S xorg-xrandr
 
 ## 📈 Roadmap
 
-- [ ] Support for **multi-monitor setups** (apply same resolution to all)
+- [X] Support for **multi-monitor setups** (apply same resolution to all; beta stage)
 - [ ] Persistent mode (via `.xprofile`)
 - [ ] Resolution presets / saving profiles
 
