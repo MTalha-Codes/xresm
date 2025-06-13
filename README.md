@@ -73,7 +73,7 @@ You may NOT:
 - ❌ Merge changes without author approval
 
 Author retains all rights and control.  
-See [LICENSE.txt](./LICENSE) for details.
+See [LICENSE](./LICENSE) file for details.
 
 ---
 
