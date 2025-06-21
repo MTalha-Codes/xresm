@@ -2,8 +2,12 @@
   <dictionary name="project">
     <words>
       <w>addmode</w>
+      <w>amode</w>
+      <w>disp</w>
+      <w>eloop</w>
       <w>hmdi</w>
       <w>newmode</w>
+      <w>nmode</w>
       <w>pclk</w>
       <w>resm</w>
       <w>talha</w>
