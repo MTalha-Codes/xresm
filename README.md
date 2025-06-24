@@ -56,24 +56,16 @@ sudo pacman -S xorg-xrandr
 ## 📈 Roadmap
 
 - [X] Support for **multi-monitor setups** (apply same resolution to all; beta stage)
-- [ ] Persistent mode (via `.xprofile`)
-- [ ] Resolution presets / saving profiles
+- [ ] Persistent mode (via `.xprofile` or `autostart` TBD)
+- [ ] Resolution presets / saving profiles (TBD)
 
 ---
-## 🔐 License:Custom Controlled Use License v1.1
 
-You may:
-- ✅ Use and share **unmodified** copies
-- ✅ Submit PRs and commits for review
-- ✅ Fork the project **privately** for learning/experimentation
+## License
 
-You may NOT:
-- ❌ Distribute modified versions
-- ❌ Host or publish altered forks
-- ❌ Merge changes without author approval
-
-Author retains all rights and control.  
-See [LICENSE](./LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 (GPLv3).
+You are free to use, modify, and distribute this software, provided that any derivative works are also licensed under GPLv3 and made available as open source.
+See the full LICENSE file for details.
 
 ---
 
@@ -82,3 +74,4 @@ See [LICENSE](./LICENSE) file for details.
 Created with love by [@MTalha-Codes](https://github.com/MTalha-Codes)  
 If it saved you a headache — leave a ⭐ on GitHub!
 
+---

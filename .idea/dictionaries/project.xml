@@ -6,11 +6,13 @@
       <w>disp</w>
       <w>eloop</w>
       <w>hmdi</w>
+      <w>modelines</w>
       <w>newmode</w>
       <w>nmode</w>
       <w>pclk</w>
       <w>resm</w>
       <w>talha</w>
+      <w>winit</w>
       <w>xresm</w>
     </words>
   </dictionary>

@@ -1,22 +1,20 @@
-Custom Controlled Use License v1.1
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
 Copyright (c) 2025 Muhammad Talha
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to:
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
 
-✅ Use the Software for personal, educational, or commercial purposes
-✅ Submit commits via pull requests to the original repository
-✅ Fork the repository **only for learning and private experimentation**
-✅ Share or distribute **unmodified** copies of the Software
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-The following restrictions apply:
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-❌ No publishing, hosting, or distribution of **modified** versions outside the original repository
-❌ No derivative works or forks meant for public distribution
-❌ No merging of changes without explicit review and approval by the original author
-❌ No sublicensing or relicensing
-
-Forks created for educational purposes must remain private and unlisted.
-The Software remains under the exclusive control of Muhammad Talha.
-All changes must be proposed through commits to this repository and are subject to approval.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.

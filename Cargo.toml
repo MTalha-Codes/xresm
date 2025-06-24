@@ -3,9 +3,11 @@ name = "xresm"
 authors = ["MTalha-Codes"]
 description = "Resolution Management CLI for X11 Based Sessions"
 repository = "https://github.com/MTalha-Codes/xresm"
-license = "MIT"
+license = "GPL-3"
 version = "1.0.0"
 edition = "2024"
+readme = "README.md"
+license-file = "LICENSE"
 
 [package.metadata.deb] # since cargo-deb can't work with [packages] so it needs this
 section = "utils"
@@ -22,4 +24,4 @@ assets = [
 ]
 [dependencies]
 thiserror = "2.0.12"
-winit = "0.29.2"
+#winit = "0.29.2"

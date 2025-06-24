@@ -1,8 +1,24 @@
+// This file is part of xresm.
+// Copyright (c) 2025 Muhammad Talha
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+
 use crate::xresm_errors::XResolutionManagerErrors;
 use crate::xresm_errors::XResolutionManagerErrors::{FaultyModeline, MissingDependencyError, NoDisplayDetected, UnknownDisplayDevice};
 use std::io::BufRead;
 use std::process::Command;
-use winit::event_loop;
+// use winit::event_loop;
 
 
 /// # Resolution Manager
@@ -31,10 +47,10 @@ impl ResolutionManager {
             target_display: disp.to_string()
         }
     }
-    pub fn get_highest_safe_resolution(&self, display: &str) {
+/*    pub fn get_highest_safe_resolution(&self, display: &str) {
         let eloop = event_loop::EventLoop::new().expect("failed to initialize instance of EventLoop");
         let monitors = eloop.available_monitors();
-    }
+    }*/
     fn is_xrandr_installed(&self) -> Result<(),XResolutionManagerErrors> {
         let xrandr_status = Command::new("xrandr").arg("--help").output().expect("Failed to execute xrandr --help");
         match xrandr_status.status.success() {
